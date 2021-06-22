@@ -35,18 +35,28 @@ public class Ball {
         terminal.putCharacter(icon);
     }
 
-    public void setNewPosition(Terminal terminal) throws IOException {
+    public void setNewPosition(Terminal terminal, Player player, int playerJustMoved) throws IOException {
         prevX = x;
         prevY = y;
         x += xAccel;
         y += yAccel;
 
         // See if we hit edges of screen
-        if (x == 0 || x == terminal.getTerminalSize().getColumns() - 1) {
+        if (x <= 0 || x >= terminal.getTerminalSize().getColumns() - 1) {
             xAccel *= -1;
         }
-        if (y == 0 || y == terminal.getTerminalSize().getRows() - 1) {
+        if (y <= 0 || y >= terminal.getTerminalSize().getRows() - 1) {
             yAccel *= -1;
+        }
+
+        // See if we hit paddle
+        if (player.isHitByBall(x, y)) {
+            if (playerJustMoved != 0) {
+                xAccel += playerJustMoved;
+            }
+            yAccel *= -1;
+            y = prevY;
+            y += yAccel;
         }
     }
 }
