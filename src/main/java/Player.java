@@ -22,33 +22,42 @@ public class Player {
 
         terminal.setCursorPosition(oldX, oldY);
         terminal.putCharacter(' ');
-        terminal.setCursorPosition(oldX+1, oldY);
+        terminal.setCursorPosition(oldX + 1, oldY);
         terminal.putCharacter(' ');
-        terminal.setCursorPosition(oldX+2, oldY);
+        terminal.setCursorPosition(oldX + 2, oldY);
         terminal.putCharacter(' ');
-        terminal.setCursorPosition(oldX+3, oldY);
+        terminal.setCursorPosition(oldX + 3, oldY);
         terminal.putCharacter(' ');
-        terminal.setCursorPosition(oldX+4, oldY);
+        terminal.setCursorPosition(oldX + 4, oldY);
         terminal.putCharacter(' ');
         terminal.setCursorPosition(x, y);
         terminal.putCharacter(playCharacter);
-        terminal.setCursorPosition(x+1, y);
+        terminal.setCursorPosition(x + 1, y);
         terminal.putCharacter(playCharacter);
-        terminal.setCursorPosition(x+2, y);
+        terminal.setCursorPosition(x + 2, y);
         terminal.putCharacter(playCharacter);
-        terminal.setCursorPosition(x+3, y);
+        terminal.setCursorPosition(x + 3, y);
         terminal.putCharacter(playCharacter);
-        terminal.setCursorPosition(x+4, y);
+        terminal.setCursorPosition(x + 4, y);
         terminal.putCharacter(playCharacter);
     }
 
-    public void setNewPositionPlayer(Terminal terminal, int move) throws IOException{
+    public void setNewPositionPlayer(Terminal terminal, int move) throws IOException {
         oldX = x;
         oldY = y;
-        x+=move;
-        if (x<0 || x>terminal.getTerminalSize().getColumns()-5){
-            x=oldX;
+        x += move;
+        if (x < 0 || x > terminal.getTerminalSize().getColumns() - 5) {
+            x = oldX;
         }
 
+    }
+
+    public boolean isHitByBall(int x, int y) {
+        if (y == this.y) {
+            if (x >= this.x && x <= this.x + 5) {
+                return true;
+            }
+        }
+        return false;
     }
 }
