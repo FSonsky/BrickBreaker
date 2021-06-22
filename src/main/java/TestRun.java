@@ -63,6 +63,19 @@ public class TestRun {
                 ballPauseCount = 0;
             }
 
+            // Check for Game Over
+            if (ball.y >= terminal.getTerminalSize().getRows()) {
+                String gameOver = "Game Over";
+                terminal.setForegroundColor(TextColor.ANSI.RED);
+                for (int i = 0; i < gameOver.length(); i++) {
+                    terminal.setCursorPosition(35 + i, 12);
+                    terminal.putCharacter(gameOver.charAt(i));
+                }
+                terminal.flush();
+                Thread.sleep(4000);
+                break;
+            }
+
             terminal.flush();
 
             ballPauseCount++;

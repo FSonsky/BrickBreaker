@@ -1,3 +1,4 @@
+import com.googlecode.lanterna.TextColor;
 import com.googlecode.lanterna.terminal.Terminal;
 
 import java.io.IOException;
@@ -29,6 +30,7 @@ public class Ball {
     }
 
     public void draw(Terminal terminal) throws IOException {
+        terminal.setForegroundColor(TextColor.ANSI.DEFAULT);
         terminal.setCursorPosition(prevX, prevY);
         terminal.putCharacter(' ');
         terminal.setCursorPosition(x, y);
@@ -45,7 +47,7 @@ public class Ball {
         if (x <= 0 || x >= terminal.getTerminalSize().getColumns() - 1) {
             xAccel *= -1;
         }
-        if (y <= 0 || y >= terminal.getTerminalSize().getRows() - 1) {
+        if (y <= 0) {
             yAccel *= -1;
         }
 
