@@ -58,10 +58,10 @@ public class Paddel {
 
             switch (keyStroke.getKeyType()){
                 case ArrowRight:
-                    player.setNewPositionPlayer(terminal, 1);
+                    player.setNewPositionPlayer(terminal, 2);
                     break;
                 case ArrowLeft:
-                    player.setNewPositionPlayer(terminal,-1);
+                    player.setNewPositionPlayer(terminal,-2);
                     break;
             }
             player.draw(terminal);
