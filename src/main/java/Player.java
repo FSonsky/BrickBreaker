@@ -16,7 +16,7 @@ public class Player {
         this.y = y;
         this.oldX = x;
         this.oldY = y;
-        this.paddelSize = 5;
+        this.paddelSize = 7;
 
 
     }
@@ -29,7 +29,6 @@ public class Player {
 
         terminal.setForegroundColor(TextColor.ANSI.GREEN);
         for (int i = 0; i < paddelSize; i++){
-
            terminal.setCursorPosition(oldX+i, oldY);
            terminal.putCharacter(' ');
 
@@ -37,30 +36,18 @@ public class Player {
 
         for (int i = 0; i < paddelSize; i++){
 
+
+            if (i==0 || i==paddelSize-1){
+                terminal.setForegroundColor(new TextColor.RGB(230, 250, 51));
+
+            }
+            else{
+                terminal.setForegroundColor(new TextColor.RGB(78,51,250));
+            }
             terminal.setCursorPosition(x + i, y);
             terminal.putCharacter(playCharacter);
-        }
 
-        /*terminal.setCursorPosition(oldX, oldY);
-        terminal.putCharacter(' ');
-        terminal.setCursorPosition(oldX + 1, oldY);
-        terminal.putCharacter(' ');
-        terminal.setCursorPosition(oldX + 2, oldY);
-        terminal.putCharacter(' ');
-        terminal.setCursorPosition(oldX + 3, oldY);
-        terminal.putCharacter(' ');
-        terminal.setCursorPosition(oldX + 4, oldY);
-        terminal.putCharacter(' ');
-        terminal.setCursorPosition(x, y);
-        terminal.putCharacter(playCharacter);
-        terminal.setCursorPosition(x + 1, y);
-        terminal.putCharacter(playCharacter);
-        terminal.setCursorPosition(x + 2, y);
-        terminal.putCharacter(playCharacter);
-        terminal.setCursorPosition(x + 3, y);
-        terminal.putCharacter(playCharacter);
-        terminal.setCursorPosition(x + 4, y);
-        terminal.putCharacter(playCharacter);*/
+        }
     }
 
     public void setNewPositionPlayer(Terminal terminal, int move) throws IOException {
