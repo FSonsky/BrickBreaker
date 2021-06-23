@@ -23,10 +23,6 @@ public class Paddel {
 
 
 
-
-
-
-
         /*tGraphics.drawRectangle(
                 new TerminalPosition(40,22), new TerminalSize(5,1), '*');
         screen.refresh();*/
