@@ -11,8 +11,8 @@ import java.util.concurrent.ThreadLocalRandom;
 public class Brick {
     public int startX;
     public int startY;
-    public int width;
-    public int heigth;
+    public int width = 5;
+    public int heigth = 1;
     private char brickChar= '\u2588';
     public List<Position> brickPos = new ArrayList<>();
     public int life = 3;
@@ -24,6 +24,13 @@ public class Brick {
         this.startY = startY;
         this.width = width;
         this.heigth = height;
+        setupList();
+    }
+
+    public Brick(int startX, int startY, BrickType brickType) {
+        this.startX = startX;
+        this.startY = startY;
+        this.brickType = brickType;
         setupList();
     }
 
@@ -83,6 +90,24 @@ public class Brick {
 
     public void drawBrick (Terminal terminal) throws IOException {
 //2593, 2591
+        TextColor color1 = new TextColor.RGB(200, 10, 10);
+        TextColor color2 = new TextColor.RGB(10, 200, 10);
+        TextColor color3 = new TextColor.RGB(200, 10, 200);
+        TextColor color4 = new TextColor.RGB(200, 200, 10);
+
+        switch (this.brickType) {
+            case PADDLE_SIZE_DECREASE:
+                terminal.setForegroundColor(color1);
+                break;
+            case PADDLE_SIZE_INCREASE:
+                terminal.setForegroundColor(color2);
+                break;
+            case BALL_SPEED_INCREASE:
+                terminal.setForegroundColor(color3);
+                break;
+            default:
+                terminal.setForegroundColor(color4);
+        }
 
         if (this.life == 2) {
             this.brickChar = '\u2593';
