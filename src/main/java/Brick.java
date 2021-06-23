@@ -1,3 +1,4 @@
+import com.googlecode.lanterna.TextColor;
 import com.googlecode.lanterna.terminal.Terminal;
 
 import javax.imageio.IIOException;
@@ -11,7 +12,8 @@ public class Brick {
     public int width;
     public int heigth;
     private final char brickChar= '\u2588';
-    public List<Position> brickPos = new ArrayList<>();;
+    public List<Position> brickPos = new ArrayList<>();
+    public int life = 3;
 
 
     public Brick(int startX, int startY, int width, int height) {
@@ -48,11 +50,21 @@ public class Brick {
     }
 
     public void drawBrick (Terminal terminal) throws IOException {
+        TextColor color = new TextColor.RGB(10, 200, 10);
+        if (this.life == 2) {
+            color = new TextColor.RGB(10, 10, 200);
+        } else if (this.life == 1) {
+            color = new TextColor.RGB(200, 10, 10);
+        }
         for (Position p : this.brickPos) {
+            terminal.setForegroundColor(color);
             terminal.setCursorPosition(p.x, p.y);
             terminal.putCharacter(this.brickChar);
         }
+        //terminal.setForegroundColor(standardColor);
     }
+
+
 
     public void removeBrick (Terminal terminal) throws IOException {
         for (Position p : this.brickPos) {
