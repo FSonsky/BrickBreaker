@@ -49,6 +49,12 @@ public class TestRun {
             b.drawBrick(terminal);
         }
 
+        int resetPaddleSizeCount = 0;
+        boolean isSpecialPaddleSize = false;
+
+        int resetBallSpeedCounter = 0;
+        boolean isSpecialBallSpeed = false;
+
         int score = 0;
         printScore(score, terminal);
 
@@ -88,8 +94,32 @@ public class TestRun {
                         ball.yAccel *= -1;
                     }
                     audio.playBrickHit();
-                    brickHit.removeBrick(terminal);
-                    bricks.remove(brickHit);
+                    brickHit.reduceLife();
+
+                    if (!brickHit.isAlive()) {
+                        brickHit.removeBrick(terminal);
+                        bricks.remove(brickHit);
+                    } else {
+                        brickHit.drawBrick(terminal);
+                    }
+
+                    switch (brickHit.brickType) {
+                        case PADDLE_SIZE_INCREASE:
+                            player.setPaddelSize(12, terminal);
+                            resetPaddleSizeCount = 30;
+                            isSpecialPaddleSize = true;
+                            break;
+                        case PADDLE_SIZE_DECREASE:
+                            player.setPaddelSize(5, terminal);
+                            resetPaddleSizeCount = 30;
+                            isSpecialPaddleSize = true;
+                            break;
+                        case BALL_SPEED_INCREASE:
+                            ball.speedFactor = 2;
+                            resetBallSpeedCounter = 30;
+                            isSpecialBallSpeed = true;
+                    }
+
                     score++;
                     printScore(score, terminal);
                 }
@@ -99,6 +129,22 @@ public class TestRun {
                 }
                 ball.draw(terminal);
                 ballPauseCount = 0;
+
+                // Take care of timed resets (Paddle size / Speed)
+                // Paddle size
+                if (isSpecialPaddleSize && resetPaddleSizeCount == 0) {
+                    player.setPaddelSize(8, terminal);
+                    isSpecialPaddleSize = false;
+                } else if (isSpecialPaddleSize) {
+                    resetPaddleSizeCount--;
+                }
+                // Ball speed
+                if (isSpecialBallSpeed && resetBallSpeedCounter == 0) {
+                    ball.speedFactor = 1;
+                    isSpecialBallSpeed = false;
+                } else if (isSpecialBallSpeed) {
+                    resetBallSpeedCounter--;
+                }
             }
 
             // Check for Game Over
@@ -127,15 +173,15 @@ public class TestRun {
     }
 
     private static void addBricks(List<Brick> bricks) {
-        bricks.add(new Brick(10, 10, 5, 1));
-        bricks.add(new Brick(20, 10, 5, 1));
-        bricks.add(new Brick(30, 10, 5, 1));
-        bricks.add(new Brick(40, 10, 5, 1));
-        bricks.add(new Brick(50, 10, 5, 1));
-        bricks.add(new Brick(60, 10, 5, 1));
-        bricks.add(new Brick(70, 10, 5, 1));
-        bricks.add(new Brick(80, 10, 5, 1));
-        bricks.add(new Brick(90, 10, 5, 1));
+        bricks.add(new Brick(10, 10, BrickType.PADDLE_SIZE_DECREASE));
+        bricks.add(new Brick(20, 10, BrickType.PADDLE_SIZE_DECREASE));
+        bricks.add(new Brick(30, 10, BrickType.PADDLE_SIZE_DECREASE));
+        bricks.add(new Brick(40, 10, BrickType.PADDLE_SIZE_DECREASE));
+        bricks.add(new Brick(50, 10, BrickType.PADDLE_SIZE_DECREASE));
+        bricks.add(new Brick(60, 10, BrickType.PADDLE_SIZE_DECREASE));
+        bricks.add(new Brick(70, 10, BrickType.PADDLE_SIZE_DECREASE));
+        bricks.add(new Brick(80, 10, BrickType.PADDLE_SIZE_DECREASE));
+        bricks.add(new Brick(90, 10, BrickType.PADDLE_SIZE_DECREASE));
     }
 
     public static Brick brickHit(List<Brick> bricks, Ball ball) {

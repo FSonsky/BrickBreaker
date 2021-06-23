@@ -48,8 +48,8 @@ public class Ball {
     public boolean setNewPosition(Terminal terminal, Player player, List<Integer> playerJustMoved) throws IOException {
         prevX = x;
         prevY = y;
-        x += xAccel;
-        y += yAccel;
+        x += xAccel * speedFactor;
+        y += yAccel * speedFactor;
 
         // See if we hit edges of screen
         if (x <= 0 || x >= terminal.getTerminalSize().getColumns() - 1) {
