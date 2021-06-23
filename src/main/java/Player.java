@@ -54,8 +54,8 @@ public class Player {
         oldX = x;
         oldY = y;
         x += move;
-        if (x < 0 || x > terminal.getTerminalSize().getColumns() - paddelSize){
-            x = oldX-move;
+        if (x < 0 || x > terminal.getTerminalSize().getColumns() - (paddelSize -1)) {
+            x = oldX;
         }
 
     }
