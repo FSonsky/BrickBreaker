@@ -63,4 +63,16 @@ public class Audio {
             ex.printStackTrace();
         }
     }
+
+    public void playLevelComplete() {
+        try {
+            AudioInputStream paddleHit = AudioSystem.getAudioInputStream(new File("src/sounds/levelComplete.wav").getAbsoluteFile());
+            Clip clip = AudioSystem.getClip();
+            clip.open(paddleHit);
+            clip.start();
+        } catch(Exception ex) {
+            System.out.println("Error with playing sound.");
+            ex.printStackTrace();
+        }
+    }
 }

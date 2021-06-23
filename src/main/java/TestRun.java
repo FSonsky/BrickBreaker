@@ -106,6 +106,23 @@ public class TestRun {
                     if (!brickHit.isAlive()) {
                         brickHit.removeBrick(terminal);
                         bricks.remove(brickHit);
+                        // TODO remove clear()
+                        bricks.clear();
+                        // Check for level complete
+                        if (bricks.isEmpty()) {
+                            levelComplete(terminal, ball, audio);
+                            bricks = new Level2().bricks;
+                            // Draw bricks
+                            for (Brick b : bricks) {
+                                b.drawBrick(terminal);
+                            }
+                            ball = new Ball(50, 27, rand.nextBoolean() ? -1 : 1, -1);
+                            ball.draw(terminal);
+                            player = new Player(48, 28);
+                            player.draw(terminal);
+                            terminal.flush();
+                            continue;
+                        }
                     } else {
                         brickHit.drawBrick(terminal);
                     }
@@ -243,5 +260,23 @@ public class TestRun {
         }
 
         return highScore;
+    }
+
+    private static void levelComplete(Terminal terminal, Ball ball, Audio audio) throws IOException, InterruptedException {
+        String text = "Level Complete";
+        terminal.setForegroundColor(TextColor.ANSI.GREEN);
+        for (int i = 0; i < text.length(); i++) {
+            terminal.setCursorPosition(43 + i, 15);
+            terminal.putCharacter(text.charAt(i));
+        }
+        terminal.flush();
+        audio.playLevelComplete();
+        Thread.sleep(5000);
+        for (int i = 0; i < text.length(); i++) {
+            terminal.setCursorPosition(43 + i, 15);
+            terminal.putCharacter(' ');
+        }
+        terminal.flush();
+        terminal.clearScreen();
     }
 }
