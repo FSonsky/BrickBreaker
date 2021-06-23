@@ -28,6 +28,30 @@ public class Audio {
         }
     }
 
+    public void playPaddleSizeBrickHit() {
+        try {
+            AudioInputStream paddleHit = AudioSystem.getAudioInputStream(new File("src/sounds/paddleSizeBrick.wav").getAbsoluteFile());
+            Clip clip = AudioSystem.getClip();
+            clip.open(paddleHit);
+            clip.start();
+        } catch(Exception ex) {
+            System.out.println("Error with playing sound.");
+            ex.printStackTrace();
+        }
+    }
+
+    public void playSpeedBrickHit() {
+        try {
+            AudioInputStream paddleHit = AudioSystem.getAudioInputStream(new File("src/sounds/speedBrick.wav").getAbsoluteFile());
+            Clip clip = AudioSystem.getClip();
+            clip.open(paddleHit);
+            clip.start();
+        } catch(Exception ex) {
+            System.out.println("Error with playing sound.");
+            ex.printStackTrace();
+        }
+    }
+
     public void playGameOver() {
         try {
             AudioInputStream paddleHit = AudioSystem.getAudioInputStream(new File("src/sounds/gameOver.wav").getAbsoluteFile());

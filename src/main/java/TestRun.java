@@ -100,7 +100,7 @@ public class TestRun {
                     if (brickHit.invertY(ball.x, ball.y)) {
                         ball.yAccel *= -1;
                     }
-                    audio.playBrickHit();
+
                     brickHit.reduceLife();
 
                     if (!brickHit.isAlive()) {
@@ -115,16 +115,22 @@ public class TestRun {
                             player.setPaddelSize(12, terminal);
                             resetPaddleSizeCount = 30;
                             isSpecialPaddleSize = true;
+                            audio.playPaddleSizeBrickHit();
                             break;
                         case PADDLE_SIZE_DECREASE:
                             player.setPaddelSize(5, terminal);
                             resetPaddleSizeCount = 30;
                             isSpecialPaddleSize = true;
+                            audio.playPaddleSizeBrickHit();
                             break;
                         case BALL_SPEED_INCREASE:
                             ball.speedFactor = 2;
                             resetBallSpeedCounter = 30;
                             isSpecialBallSpeed = true;
+                            audio.playSpeedBrickHit();
+                        default:
+                            audio.playBrickHit();
+                            break;
                     }
 
                     score++;
