@@ -1,3 +1,7 @@
+import com.googlecode.lanterna.TextColor;
+import com.googlecode.lanterna.terminal.Terminal;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -6,6 +10,7 @@ public class Brick {
     public int startY;
     public int width;
     public int heigth;
+    public final char icon = '\u2588';
     public List<Position> brickPos = new ArrayList<>();;
 
 
@@ -42,5 +47,17 @@ public class Brick {
         return false;
     }
 
+    public void draw(Terminal terminal) throws IOException {
+        terminal.setForegroundColor(TextColor.ANSI.DEFAULT);
+        terminal.setCursorPosition(x, y);
+        terminal.putCharacter(icon);
+        terminal.flush();
+    }
 
+    public void remove(Terminal terminal) throws IOException {
+        terminal.setForegroundColor(TextColor.ANSI.DEFAULT);
+        terminal.setCursorPosition(x, y);
+        terminal.putCharacter(' ');
+        terminal.flush();
+    }
 }
