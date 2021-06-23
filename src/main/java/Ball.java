@@ -40,7 +40,7 @@ public class Ball {
         terminal.flush();
     }
 
-    public void setNewPosition(Terminal terminal, Player player, List<Integer> playerJustMoved) throws IOException {
+    public boolean setNewPosition(Terminal terminal, Player player, List<Integer> playerJustMoved) throws IOException {
         prevX = x;
         prevY = y;
         x += xAccel;
@@ -62,6 +62,10 @@ public class Ball {
             yAccel *= -1;
             y = prevY;
             y += yAccel;
+
+            return true;
         }
+
+        return false;
     }
 }
