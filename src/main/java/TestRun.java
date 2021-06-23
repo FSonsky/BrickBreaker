@@ -1,14 +1,10 @@
 import com.googlecode.lanterna.SGR;
 import com.googlecode.lanterna.TerminalSize;
 import com.googlecode.lanterna.TextColor;
-import com.googlecode.lanterna.graphics.TextGraphics;
 import com.googlecode.lanterna.input.KeyStroke;
-import com.googlecode.lanterna.input.KeyType;
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
 import com.googlecode.lanterna.terminal.Terminal;
 
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.UnsupportedAudioFileException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
@@ -27,6 +23,121 @@ public class TestRun {
         Terminal terminal = terminalFactory.createTerminal();
         terminal.setCursorVisible(false);
 
+        drawMenu(terminal);
+
+        boolean isRunning = true;
+        KeyStroke keyStroke;
+        Audio audio = new Audio();
+        audio.playTheme();
+        while (isRunning) {
+            keyStroke = terminal.pollInput();
+            if (keyStroke != null) {
+                switch (keyStroke.getKeyType()) {
+                    case Character:
+                        char c = keyStroke.getCharacter();
+                        if (c == '1') {
+                            terminal.clearScreen();
+                            audio.clip.stop();
+                            runGame(terminal);
+                            drawMenu(terminal);
+                            audio.clip.start();
+                        } else if (c == '2') {
+                            terminal.clearScreen();
+                            viewLevels(terminal);
+                            drawMenu(terminal);
+                        }
+                        break;
+                    case Escape:
+                        isRunning = false;
+                        break;
+                }
+            }
+
+            Thread.sleep(10);
+        }
+
+        audio.clip.stop();
+        terminal.close();
+    }
+
+    public static void drawMenu(Terminal terminal) throws IOException {
+        terminal.clearScreen();
+        terminal.setForegroundColor(TextColor.ANSI.RED);
+        // Frame
+        terminal.setCursorPosition(42, 9);
+        terminal.putCharacter('\u25DC');
+        terminal.setCursorPosition(58, 9);
+        terminal.putCharacter('\u25DD');
+
+        for (int i = 0; i < 15; i++) {
+            terminal.setCursorPosition(43 + i, 9);
+            terminal.putCharacter('-');
+        }
+
+        terminal.setCursorPosition(42, 17);
+        terminal.putCharacter('\u25DF');
+        terminal.setCursorPosition(58, 17);
+        terminal.putCharacter('\u25DE');
+
+        for (int i = 0; i < 15; i++) {
+            terminal.setCursorPosition(43 + i, 17);
+            terminal.putCharacter('-');
+        }
+
+        for (int i = 0; i < 7; i++) {
+            terminal.setCursorPosition(42, 10 + i);
+            terminal.putCharacter('|');
+        }
+
+        for (int i = 0; i < 7; i++) {
+            terminal.setCursorPosition(58, 10 + i);
+            terminal.putCharacter('|');
+        }
+
+        // Menu text
+        String text = "Brick Breaker";
+        terminal.enableSGR(SGR.BOLD);
+        terminal.enableSGR(SGR.UNDERLINE);
+        for (int i = 0; i < text.length(); i++) {
+            terminal.setCursorPosition((50 - 6) + i, 10);
+            terminal.putCharacter(text.charAt(i));
+        }
+        terminal.disableSGR(SGR.BOLD);
+        terminal.disableSGR(SGR.UNDERLINE);
+
+        text = "1. Play Game";
+        terminal.setForegroundColor(TextColor.ANSI.DEFAULT);
+        for (int i = 0; i < text.length(); i++) {
+            terminal.setCursorPosition((50 - 6) + i, 12);
+            terminal.putCharacter(text.charAt(i));
+        }
+
+        text = "2. View Levels";
+        terminal.setForegroundColor(TextColor.ANSI.DEFAULT);
+        for (int i = 0; i < text.length(); i++) {
+            terminal.setCursorPosition((50 - 6) + i, 14);
+            terminal.putCharacter(text.charAt(i));
+        }
+
+        text = "Esc. Quit";
+        terminal.setForegroundColor(TextColor.ANSI.DEFAULT);
+        for (int i = 0; i < text.length(); i++) {
+            terminal.setCursorPosition((50 - 6) + i, 16);
+            terminal.putCharacter(text.charAt(i));
+        }
+
+        text = "Created by: Daniel Gidlund, Marie Svensson, Frederik Sonsky, Sebastian Berg";
+        terminal.setForegroundColor(TextColor.ANSI.CYAN);
+        terminal.enableSGR(SGR.ITALIC);
+        for (int i = 0; i < text.length(); i++) {
+            terminal.setCursorPosition(1 + i, 28);
+            terminal.putCharacter(text.charAt(i));
+        }
+        terminal.disableSGR(SGR.ITALIC);
+        terminal.flush();
+    }
+
+    private static void runGame(Terminal terminal) throws IOException, InterruptedException {
         Audio audio = new Audio();
 
         int x = terminal.getTerminalSize().getColumns() / 2, y = 27;
@@ -66,7 +177,7 @@ public class TestRun {
         printScore(score, highScore, terminal);
 
         while (isRunning) {
-            Thread.sleep(1);
+            Thread.sleep(5);
             keyStroke = terminal.pollInput();
             playerJustMoved.add(0);
 
@@ -107,10 +218,10 @@ public class TestRun {
                         brickHit.removeBrick(terminal);
                         bricks.remove(brickHit);
                         // TODO remove clear()
-                        bricks.clear();
+                        //bricks.clear();
                         // Check for level complete
                         if (bricks.isEmpty()) {
-                            levelComplete(terminal, ball, audio);
+                            levelComplete(terminal, audio);
                             bricks = new Level2().bricks;
                             // Draw bricks
                             for (Brick b : bricks) {
@@ -203,8 +314,68 @@ public class TestRun {
         if (score > highScore) {
             saveScore(score);
         }
+    }
 
-        terminal.close();
+    private static void viewLevels(Terminal terminal) throws IOException {
+        terminal.clearScreen();
+        Levels levels = new Levels();
+        int selectedLevel = 1;
+        boolean isRunning = true;
+        KeyStroke keyStroke;
+
+        drawLevel(terminal, selectedLevel, levels);
+
+        while (isRunning) {
+            keyStroke = terminal.pollInput();
+            if (keyStroke != null) {
+                switch (keyStroke.getKeyType()) {
+                    case ArrowLeft:
+                        if (selectedLevel > 1) {
+                            selectedLevel--;
+                            drawLevel(terminal, selectedLevel, levels);
+                        }
+                        break;
+                    case ArrowRight:
+                        if (selectedLevel < levels.levels.size()) {
+                            selectedLevel++;
+                            drawLevel(terminal, selectedLevel, levels);
+                        }
+                        break;
+                    case Escape:
+                        isRunning = false;
+                        break;
+                }
+            }
+        }
+    }
+
+    private static void drawLevel(Terminal terminal, int level, Levels levels) throws IOException {
+        terminal.clearScreen();
+        String text = "Level " + level + " of " + levels.levels.size();
+        terminal.setForegroundColor(TextColor.ANSI.DEFAULT);
+        for (int i = 0; i < text.length(); i++) {
+            terminal.setCursorPosition(1 + i, 1);
+            terminal.putCharacter(text.charAt(i));
+        }
+
+        text = "\u2190 Prev   Next \u2192";
+        for (int i = 0; i < text.length(); i++) {
+            terminal.setCursorPosition(50 - (text.length() / 2) + i, 28);
+            terminal.putCharacter(text.charAt(i));
+        }
+
+        text = "ESC: Back";
+        for (int i = 0; i < text.length(); i++) {
+            terminal.setCursorPosition(1 + i, 28);
+            terminal.putCharacter(text.charAt(i));
+        }
+
+        List<Brick> bricks = levels.levels.get(level - 1);
+        for (Brick brick : bricks) {
+            brick.drawBrick(terminal);
+        }
+
+        terminal.flush();
     }
 
     public static Brick brickHit(List<Brick> bricks, Ball ball) {
@@ -262,7 +433,7 @@ public class TestRun {
         return highScore;
     }
 
-    private static void levelComplete(Terminal terminal, Ball ball, Audio audio) throws IOException, InterruptedException {
+    private static void levelComplete(Terminal terminal, Audio audio) throws IOException, InterruptedException {
         String text = "Level Complete";
         terminal.setForegroundColor(TextColor.ANSI.GREEN);
         for (int i = 0; i < text.length(); i++) {
