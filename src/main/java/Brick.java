@@ -13,7 +13,7 @@ public class Brick {
     public int startY;
     public int width;
     public int heigth;
-    private final char brickChar= '\u2588';
+    private char brickChar= '\u2588';
     public List<Position> brickPos = new ArrayList<>();
     public int life = 3;
     public BrickType brickType = BrickType.NORMAL;
@@ -25,7 +25,6 @@ public class Brick {
         this.width = width;
         this.heigth = height;
         setupList();
-        randomBrickType();
     }
 
     public void randomBrickType () {
@@ -45,7 +44,6 @@ public class Brick {
                 this.brickType = BrickType.PADDLE_SIZE_INCREASE;
         }
     }
-
     public void setBrickType (BrickType brickType) {
         this.brickType = brickType;
     }
@@ -55,7 +53,7 @@ public class Brick {
     }
 
     public boolean isAlive () {
-        return this.life != 1;
+        return this.life != 0;
     }
 
     private void setupList () {
@@ -84,14 +82,14 @@ public class Brick {
     }
 
     public void drawBrick (Terminal terminal) throws IOException {
+//2593, 2591
 
         if (this.life == 2) {
-            color = new TextColor.RGB(10, 10, 200);
+            this.brickChar = '\u2593';
         } else if (this.life == 1) {
-            color = new TextColor.RGB(200, 10, 10);
+            this.brickChar = '\u2591';
         }
         for (Position p : this.brickPos) {
-            terminal.setForegroundColor(color);
             terminal.setCursorPosition(p.x, p.y);
             terminal.putCharacter(this.brickChar);
         }
