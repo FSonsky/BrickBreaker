@@ -5,6 +5,8 @@ import javax.imageio.IIOException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class Brick {
     public int startX;
@@ -14,6 +16,7 @@ public class Brick {
     private final char brickChar= '\u2588';
     public List<Position> brickPos = new ArrayList<>();
     public int life = 3;
+    public BrickType brickType = BrickType.NORMAL;
 
 
     public Brick(int startX, int startY, int width, int height) {
@@ -22,6 +25,37 @@ public class Brick {
         this.width = width;
         this.heigth = height;
         setupList();
+        randomBrickType();
+    }
+
+    public void randomBrickType () {
+        Random rand = new Random();
+        int randomBrick = rand.nextInt(4);
+        switch (randomBrick) {
+            case 0:
+                this.brickType = BrickType.NORMAL;
+                break;
+            case 1:
+                this.brickType = BrickType.BALL_SPEED_INCREASE;
+                break;
+            case 2:
+                this.brickType = BrickType.PADDLE_SIZE_DECREASE;
+                break;
+            default:
+                this.brickType = BrickType.PADDLE_SIZE_INCREASE;
+        }
+    }
+
+    public void setBrickType (BrickType brickType) {
+        this.brickType = brickType;
+    }
+
+    public void reduceLife () {
+        this.life--;
+    }
+
+    public boolean isAlive () {
+        return this.life != 1;
     }
 
     private void setupList () {
@@ -50,7 +84,7 @@ public class Brick {
     }
 
     public void drawBrick (Terminal terminal) throws IOException {
-        TextColor color = new TextColor.RGB(10, 200, 10);
+
         if (this.life == 2) {
             color = new TextColor.RGB(10, 10, 200);
         } else if (this.life == 1) {
