@@ -14,7 +14,7 @@ import java.util.Random;
 
 public class TestRun {
 
-    public static void main(String[] args) throws IOException, InterruptedException, UnsupportedAudioFileException, LineUnavailableException {
+    public static void main(String[] args) throws IOException, InterruptedException {
         TerminalSize ts = new TerminalSize(100, 30);
         DefaultTerminalFactory terminalFactory = new DefaultTerminalFactory();
         terminalFactory.setInitialTerminalSize(ts);
@@ -48,6 +48,9 @@ public class TestRun {
         for (Brick b : bricks) {
             b.drawBrick(terminal);
         }
+
+        int score = 0;
+        printScore(score, terminal);
 
         while (isRunning) {
             Thread.sleep(1);
@@ -87,6 +90,8 @@ public class TestRun {
                     audio.playBrickHit();
                     brickHit.removeBrick(terminal);
                     bricks.remove(brickHit);
+                    score++;
+                    printScore(score, terminal);
                 }
 
                 if (ball.setNewPosition(terminal, player, playerJustMoved)) {
@@ -104,6 +109,7 @@ public class TestRun {
                     terminal.setCursorPosition(46 + i, 15);
                     terminal.putCharacter(gameOver.charAt(i));
                 }
+                ball.remove(terminal);
                 terminal.flush();
                 audio.playGameOver();
                 Thread.sleep(4000);
@@ -142,5 +148,14 @@ public class TestRun {
         }
 
         return null;
+    }
+
+    private static void printScore(int score, Terminal terminal) throws IOException {
+        terminal.setForegroundColor(TextColor.ANSI.WHITE);
+        String text = "Score: " + score;
+        for (int i = text.length() - 1; i >= 0; i--) {
+            terminal.setCursorPosition(1 + i, 1);
+            terminal.putCharacter(text.charAt(i));
+        }
     }
 }
