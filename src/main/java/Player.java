@@ -16,7 +16,7 @@ public class Player {
         this.y = y;
         this.oldX = x;
         this.oldY = y;
-        this.paddelSize = 7;
+        this.paddelSize = 8;
 
 
     }
@@ -54,7 +54,7 @@ public class Player {
         oldX = x;
         oldY = y;
         x += move;
-        if (x < 0 || x > terminal.getTerminalSize().getColumns() - paddelSize) {
+        if (x < 0 || x > terminal.getTerminalSize().getColumns() - (paddelSize -1)) {
             x = oldX;
         }
 
@@ -68,4 +68,5 @@ public class Player {
         }
         return false;
     }
+
 }
