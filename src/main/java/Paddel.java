@@ -14,14 +14,12 @@ public class Paddel {
 
 
 
+
+
     public static void main(String[]args) throws IOException, InterruptedException {
         Terminal terminal = new DefaultTerminalFactory().createTerminal();
         Screen screen = new TerminalScreen(terminal);
         terminal.setCursorVisible(false);
-
-
-
-
 
 
 
