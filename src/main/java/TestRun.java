@@ -1,5 +1,7 @@
+import com.googlecode.lanterna.SGR;
 import com.googlecode.lanterna.TerminalSize;
 import com.googlecode.lanterna.TextColor;
+import com.googlecode.lanterna.graphics.TextGraphics;
 import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.input.KeyType;
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
@@ -7,10 +9,14 @@ import com.googlecode.lanterna.terminal.Terminal;
 
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.Scanner;
 
 public class TestRun {
 
@@ -56,7 +62,8 @@ public class TestRun {
         boolean isSpecialBallSpeed = false;
 
         int score = 0;
-        printScore(score, terminal);
+        final int highScore = readHighScoreFromFile();
+        printScore(score, highScore, terminal);
 
         while (isRunning) {
             Thread.sleep(1);
@@ -121,7 +128,7 @@ public class TestRun {
                     }
 
                     score++;
-                    printScore(score, terminal);
+                    printScore(score, highScore, terminal);
                 }
 
                 if (ball.setNewPosition(terminal, player, playerJustMoved)) {
@@ -169,6 +176,11 @@ public class TestRun {
         }
 
         System.out.println("Quit");
+
+        if (score > highScore) {
+            saveScore(score);
+        }
+
         terminal.close();
     }
 
@@ -196,12 +208,46 @@ public class TestRun {
         return null;
     }
 
-    private static void printScore(int score, Terminal terminal) throws IOException {
+    private static void printScore(int score, int highScore, Terminal terminal) throws IOException {
         terminal.setForegroundColor(TextColor.ANSI.WHITE);
-        String text = "Score: " + score;
+        terminal.enableSGR(SGR.UNDERLINE);
+        String text = "Score: " + score + "  Best: " + highScore;
         for (int i = text.length() - 1; i >= 0; i--) {
             terminal.setCursorPosition(1 + i, 1);
             terminal.putCharacter(text.charAt(i));
         }
+
+        for (int i = text.length(); i < 100; i++) {
+            terminal.setCursorPosition(1 + i, 1);
+            terminal.putCharacter(' ');
+        }
+        terminal.disableSGR(SGR.UNDERLINE);
+    }
+
+    private static void saveScore(int score) {
+        try {
+            FileWriter myWriter = new FileWriter("highScore.txt");
+            myWriter.write(Integer.toString(score));
+            myWriter.close();
+            System.out.println("Successfully wrote to the file.");
+        } catch (IOException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
+    }
+
+    private static int readHighScoreFromFile() {
+        int highScore = 0;
+        try {
+            File myObj = new File("highScore.txt");
+            Scanner myReader = new Scanner(myObj);
+            highScore = myReader.nextInt();
+            myReader.close();
+        } catch (FileNotFoundException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
+
+        return highScore;
     }
 }
