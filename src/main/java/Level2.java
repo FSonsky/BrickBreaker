@@ -9,7 +9,7 @@ public class Level2 {
         bricks.add(new Brick(37, 1, BrickType.NORMAL));
         bricks.add(new Brick(44, 1, BrickType.PADDLE_SIZE_INCREASE));
         bricks.add(new Brick(51, 1, BrickType.PADDLE_SIZE_DECREASE));
-        bricks.add(new Brick(58, 3, BrickType.NORMAL));
+        bricks.add(new Brick(58, 1, BrickType.NORMAL));
 
         bricks.add(new Brick(2, 3, BrickType.NORMAL));
         //bricks.add(new Brick(9, 3, BrickType.NORMAL));
