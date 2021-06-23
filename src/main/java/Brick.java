@@ -1,17 +1,22 @@
+import com.googlecode.lanterna.TextColor;
 import com.googlecode.lanterna.terminal.Terminal;
 
 import javax.imageio.IIOException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class Brick {
     public int startX;
     public int startY;
     public int width;
     public int heigth;
-    private final char brickChar= '\u2588';
-    public List<Position> brickPos = new ArrayList<>();;
+    private char brickChar= '\u2588';
+    public List<Position> brickPos = new ArrayList<>();
+    public int life = 3;
+    public BrickType brickType = BrickType.NORMAL;
 
 
     public Brick(int startX, int startY, int width, int height) {
@@ -20,6 +25,35 @@ public class Brick {
         this.width = width;
         this.heigth = height;
         setupList();
+    }
+
+    public void randomBrickType () {
+        Random rand = new Random();
+        int randomBrick = rand.nextInt(4);
+        switch (randomBrick) {
+            case 0:
+                this.brickType = BrickType.NORMAL;
+                break;
+            case 1:
+                this.brickType = BrickType.BALL_SPEED_INCREASE;
+                break;
+            case 2:
+                this.brickType = BrickType.PADDLE_SIZE_DECREASE;
+                break;
+            default:
+                this.brickType = BrickType.PADDLE_SIZE_INCREASE;
+        }
+    }
+    public void setBrickType (BrickType brickType) {
+        this.brickType = brickType;
+    }
+
+    public void reduceLife () {
+        this.life--;
+    }
+
+    public boolean isAlive () {
+        return this.life != 0;
     }
 
     private void setupList () {
@@ -48,11 +82,21 @@ public class Brick {
     }
 
     public void drawBrick (Terminal terminal) throws IOException {
+//2593, 2591
+
+        if (this.life == 2) {
+            this.brickChar = '\u2593';
+        } else if (this.life == 1) {
+            this.brickChar = '\u2591';
+        }
         for (Position p : this.brickPos) {
             terminal.setCursorPosition(p.x, p.y);
             terminal.putCharacter(this.brickChar);
         }
+        //terminal.setForegroundColor(standardColor);
     }
+
+
 
     public void removeBrick (Terminal terminal) throws IOException {
         for (Position p : this.brickPos) {
