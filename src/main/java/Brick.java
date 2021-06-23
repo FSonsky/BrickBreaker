@@ -1,6 +1,6 @@
-import com.googlecode.lanterna.TextColor;
 import com.googlecode.lanterna.terminal.Terminal;
 
+import javax.imageio.IIOException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +10,7 @@ public class Brick {
     public int startY;
     public int width;
     public int heigth;
-    public final char icon = '\u2588';
+    private final char brickChar= '\u2588';
     public List<Position> brickPos = new ArrayList<>();;
 
 
@@ -30,7 +30,7 @@ public class Brick {
         }
     }
 
-    private boolean invertX (int x, int y) {
+    public boolean invertX (int x, int y) {
         for (Position p : brickPos) {
             if (p.x + 1 == x || p.x - 1 == x && p.y == y) {
                 return true;
@@ -38,7 +38,7 @@ public class Brick {
         }
         return false;
     }
-    private boolean invertY (int x, int y) {
+    public boolean invertY (int x, int y) {
         for (Position p : brickPos) {
             if (p.y + 1 == y || p.y - 1 == y && p.x == x) {
                 return true;
@@ -47,17 +47,19 @@ public class Brick {
         return false;
     }
 
-    public void draw(Terminal terminal) throws IOException {
-        terminal.setForegroundColor(TextColor.ANSI.DEFAULT);
-        terminal.setCursorPosition(x, y);
-        terminal.putCharacter(icon);
-        terminal.flush();
+    public void drawBrick (Terminal terminal) throws IOException {
+        for (Position p : this.brickPos) {
+            terminal.setCursorPosition(p.x, p.y);
+            terminal.putCharacter(this.brickChar);
+        }
     }
 
-    public void remove(Terminal terminal) throws IOException {
-        terminal.setForegroundColor(TextColor.ANSI.DEFAULT);
-        terminal.setCursorPosition(x, y);
-        terminal.putCharacter(' ');
-        terminal.flush();
+    public void removeBrick (Terminal terminal) throws IOException {
+        for (Position p : this.brickPos) {
+            terminal.setCursorPosition(p.x, p.y);
+            terminal.putCharacter(' ');
+        }
     }
+
+
 }
