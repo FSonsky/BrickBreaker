@@ -184,18 +184,6 @@ public class TestRun {
         terminal.close();
     }
 
-    private static void addBricks(List<Brick> bricks) {
-        bricks.add(new Brick(10, 10, BrickType.PADDLE_SIZE_DECREASE));
-        bricks.add(new Brick(20, 10, BrickType.PADDLE_SIZE_INCREASE));
-        bricks.add(new Brick(30, 10, BrickType.PADDLE_SIZE_DECREASE));
-        bricks.add(new Brick(40, 10, BrickType.PADDLE_SIZE_DECREASE));
-        bricks.add(new Brick(50, 10, BrickType.BALL_SPEED_INCREASE));
-        bricks.add(new Brick(60, 10, BrickType.PADDLE_SIZE_DECREASE));
-        bricks.add(new Brick(70, 10, BrickType.BALL_SPEED_INCREASE));
-        bricks.add(new Brick(80, 10, BrickType.PADDLE_SIZE_DECREASE));
-        bricks.add(new Brick(90, 10, BrickType.PADDLE_SIZE_DECREASE));
-    }
-
     public static Brick brickHit(List<Brick> bricks, Ball ball) {
         for (Brick b : bricks) {
             if (ball.y <= b.startY + b.heigth && ball.y >= b.startY - 1) {
