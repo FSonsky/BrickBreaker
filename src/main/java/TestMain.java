@@ -46,7 +46,7 @@ public class TestMain {
 
             // Move ball
 
-            ball.setNewPosition(terminal, invertX, invertY);
+            //ball.setNewPosition(terminal, 0, 0);
             ball.draw(terminal);
 
             terminal.flush();
@@ -72,9 +72,7 @@ public class TestMain {
 
     private static void drawBrick (Terminal terminal, List<Brick> brickPos) throws IOException {
 
-        for (Brick b : brickPos) {
-            b.
-        }
+
     }
 
 
