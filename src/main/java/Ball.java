@@ -2,6 +2,7 @@ import com.googlecode.lanterna.TextColor;
 import com.googlecode.lanterna.terminal.Terminal;
 
 import java.io.IOException;
+import java.util.List;
 
 public class Ball {
     public int x;
@@ -39,7 +40,7 @@ public class Ball {
         terminal.flush();
     }
 
-    public void setNewPosition(Terminal terminal, Player player, int playerJustMoved) throws IOException {
+    public void setNewPosition(Terminal terminal, Player player, List<Integer> playerJustMoved) throws IOException {
         prevX = x;
         prevY = y;
         x += xAccel;
@@ -49,14 +50,14 @@ public class Ball {
         if (x <= 0 || x >= terminal.getTerminalSize().getColumns() - 1) {
             xAccel *= -1;
         }
-        if (y <= 0) {
+        if (y <= 1) {
             yAccel *= -1;
         }
 
         // See if we hit paddle
         if (player.isHitByBall(x, y)) {
-            if (playerJustMoved != 0) {
-                xAccel += playerJustMoved;
+            for (Integer move : playerJustMoved) {
+                xAccel += move;
             }
             yAccel *= -1;
             y = prevY;
