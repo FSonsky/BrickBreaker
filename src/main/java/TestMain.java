@@ -20,7 +20,7 @@ public class TestMain {
         terminal.setCursorVisible(false);
         TextGraphics tGraphics = terminal.newTextGraphics();
 
-        List<NewBrickTest> brickList = makeBricks((terminal.getTerminalSize().getColumns() / 2), 6, 15);;
+        List<Brick> brickList = makeBricks((terminal.getTerminalSize().getColumns() / 2), 6, 15);;
 
         boolean invertX;
         boolean invertY;
@@ -45,7 +45,7 @@ public class TestMain {
             }
 
             // Move ball
-            invertX = b
+
             ball.setNewPosition(terminal, invertX, invertY);
             ball.draw(terminal);
 
@@ -57,26 +57,23 @@ public class TestMain {
 
     }
 
-    private static List<NewBrickTest> makeBricks(int midPointX, int blocksY, int blocksX) {
-        List<NewBrickTest> bricks = new ArrayList<>();
+    private static List<Brick> makeBricks(int midPointX, int blocksY, int blocksX) {
+        List<Brick> bricks = new ArrayList<>();
         int brickWidth = 4;
         int brickHeight = 1;
         for (int i = 2; i <= blocksY*brickHeight + 2; i+=brickHeight + 1) {
             for (int j = (midPointX - (brickWidth * (blocksX/2)));
                  j <= (midPointX + (brickWidth * (blocksX/2))); j+=brickWidth + 1) {
-                bricks.add(new NewBrickTest(j, i, brickWidth, brickHeight));
+                bricks.add(new Brick(j, i, brickWidth, brickHeight));
             }
         }
         return bricks;
     }
 
-    private static void drawBrick (Terminal terminal, List<NewBrickTest> brickPos) throws IOException {
+    private static void drawBrick (Terminal terminal, List<Brick> brickPos) throws IOException {
 
-        for (NewBrickTest b : brickPos) {
-            for (Position p : b.brickPos) {
-                terminal.setCursorPosition(p.x, p.y);
-                terminal.putCharacter('\u2588');
-            }
+        for (Brick b : brickPos) {
+            b.
         }
     }
 
