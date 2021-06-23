@@ -47,7 +47,7 @@ public class TestRun {
         List<Integer> playerJustMoved = new ArrayList<>();
 
         // Create bricks
-        Level2 level = new Level2();
+        Level1 level = new Level1();
         List<Brick> bricks = level.bricks;
 
         // Draw bricks
