@@ -11,15 +11,15 @@ import java.util.Random;
 public class TestRun {
 
     public static void main(String[] args) throws IOException, InterruptedException {
-        //TerminalSize ts = new TerminalSize(400, 420);
+        TerminalSize ts = new TerminalSize(100, 30);
         DefaultTerminalFactory terminalFactory = new DefaultTerminalFactory();
-        //terminalFactory.setInitialTerminalSize(ts);
+        terminalFactory.setInitialTerminalSize(ts);
         Terminal terminal = terminalFactory.createTerminal();
         terminal.setCursorVisible(false);
 
-        int x = terminal.getTerminalSize().getColumns() / 2, y = 20;
+        int x = terminal.getTerminalSize().getColumns() / 2, y = 27;
 
-        Player player = new Player(40, 22);
+        Player player = new Player(48, 28);
         player.draw(terminal);
 
         Random rand = new Random();
@@ -41,12 +41,12 @@ public class TestRun {
             if (keyStroke != null) {
                 switch (keyStroke.getKeyType()) {
                     case ArrowRight:
-                        player.setNewPositionPlayer(terminal, 1);
+                        player.setNewPositionPlayer(terminal, 2);
                         player.draw(terminal);
                         playerJustMoved = 1;
                         break;
                     case ArrowLeft:
-                        player.setNewPositionPlayer(terminal,-1);
+                        player.setNewPositionPlayer(terminal,-2);
                         player.draw(terminal);
                         playerJustMoved = -1;
                         break;
@@ -57,7 +57,7 @@ public class TestRun {
             }
 
             // Move ball
-            if (ballPauseCount >= 30) {
+            if (ballPauseCount >= 20) {
                 ball.setNewPosition(terminal, player, playerJustMoved);
                 ball.draw(terminal);
                 ballPauseCount = 0;
@@ -68,7 +68,7 @@ public class TestRun {
                 String gameOver = "Game Over";
                 terminal.setForegroundColor(TextColor.ANSI.RED);
                 for (int i = 0; i < gameOver.length(); i++) {
-                    terminal.setCursorPosition(35 + i, 12);
+                    terminal.setCursorPosition(46 + i, 15);
                     terminal.putCharacter(gameOver.charAt(i));
                 }
                 terminal.flush();

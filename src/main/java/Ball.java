@@ -13,6 +13,7 @@ public class Ball {
     public int speedFactor = 1;
     public final char icon = 'O';
 
+
     public Ball(int x, int y) {
         this.x = x;
         this.y = y;
@@ -35,6 +36,7 @@ public class Ball {
         terminal.putCharacter(' ');
         terminal.setCursorPosition(x, y);
         terminal.putCharacter(icon);
+        terminal.flush();
     }
 
     public void setNewPosition(Terminal terminal, Player player, int playerJustMoved) throws IOException {
