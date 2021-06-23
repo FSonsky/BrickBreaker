@@ -14,7 +14,7 @@ import java.util.Random;
 
 public class TestRun {
 
-    public static void main(String[] args) throws IOException, InterruptedException, UnsupportedAudioFileException, LineUnavailableException {
+    public static void main(String[] args) throws IOException, InterruptedException {
         TerminalSize ts = new TerminalSize(100, 30);
         DefaultTerminalFactory terminalFactory = new DefaultTerminalFactory();
         terminalFactory.setInitialTerminalSize(ts);
@@ -41,13 +41,22 @@ public class TestRun {
         List<Integer> playerJustMoved = new ArrayList<>();
 
         // Create bricks
-        List<Brick> bricks = new ArrayList<>();
-        addBricks(bricks);
+        Level2 level = new Level2();
+        List<Brick> bricks = level.bricks;
 
         // Draw bricks
         for (Brick b : bricks) {
             b.drawBrick(terminal);
         }
+
+        int resetPaddleSizeCount = 0;
+        boolean isSpecialPaddleSize = false;
+
+        int resetBallSpeedCounter = 0;
+        boolean isSpecialBallSpeed = false;
+
+        int score = 0;
+        printScore(score, terminal);
 
         while (isRunning) {
             Thread.sleep(1);
@@ -85,8 +94,34 @@ public class TestRun {
                         ball.yAccel *= -1;
                     }
                     audio.playBrickHit();
-                    brickHit.removeBrick(terminal);
-                    bricks.remove(brickHit);
+                    brickHit.reduceLife();
+
+                    if (!brickHit.isAlive()) {
+                        brickHit.removeBrick(terminal);
+                        bricks.remove(brickHit);
+                    } else {
+                        brickHit.drawBrick(terminal);
+                    }
+
+                    switch (brickHit.brickType) {
+                        case PADDLE_SIZE_INCREASE:
+                            player.setPaddelSize(12, terminal);
+                            resetPaddleSizeCount = 30;
+                            isSpecialPaddleSize = true;
+                            break;
+                        case PADDLE_SIZE_DECREASE:
+                            player.setPaddelSize(5, terminal);
+                            resetPaddleSizeCount = 30;
+                            isSpecialPaddleSize = true;
+                            break;
+                        case BALL_SPEED_INCREASE:
+                            ball.speedFactor = 2;
+                            resetBallSpeedCounter = 30;
+                            isSpecialBallSpeed = true;
+                    }
+
+                    score++;
+                    printScore(score, terminal);
                 }
 
                 if (ball.setNewPosition(terminal, player, playerJustMoved)) {
@@ -94,6 +129,22 @@ public class TestRun {
                 }
                 ball.draw(terminal);
                 ballPauseCount = 0;
+
+                // Take care of timed resets (Paddle size / Speed)
+                // Paddle size
+                if (isSpecialPaddleSize && resetPaddleSizeCount == 0) {
+                    player.setPaddelSize(8, terminal);
+                    isSpecialPaddleSize = false;
+                } else if (isSpecialPaddleSize) {
+                    resetPaddleSizeCount--;
+                }
+                // Ball speed
+                if (isSpecialBallSpeed && resetBallSpeedCounter == 0) {
+                    ball.speedFactor = 1;
+                    isSpecialBallSpeed = false;
+                } else if (isSpecialBallSpeed) {
+                    resetBallSpeedCounter--;
+                }
             }
 
             // Check for Game Over
@@ -104,6 +155,7 @@ public class TestRun {
                     terminal.setCursorPosition(46 + i, 15);
                     terminal.putCharacter(gameOver.charAt(i));
                 }
+                ball.remove(terminal);
                 terminal.flush();
                 audio.playGameOver();
                 Thread.sleep(4000);
@@ -121,15 +173,15 @@ public class TestRun {
     }
 
     private static void addBricks(List<Brick> bricks) {
-        bricks.add(new Brick(10, 10, 5, 1));
-        bricks.add(new Brick(20, 10, 5, 1));
-        bricks.add(new Brick(30, 10, 5, 1));
-        bricks.add(new Brick(40, 10, 5, 1));
-        bricks.add(new Brick(50, 10, 5, 1));
-        bricks.add(new Brick(60, 10, 5, 1));
-        bricks.add(new Brick(70, 10, 5, 1));
-        bricks.add(new Brick(80, 10, 5, 1));
-        bricks.add(new Brick(90, 10, 5, 1));
+        bricks.add(new Brick(10, 10, BrickType.PADDLE_SIZE_DECREASE));
+        bricks.add(new Brick(20, 10, BrickType.PADDLE_SIZE_INCREASE));
+        bricks.add(new Brick(30, 10, BrickType.PADDLE_SIZE_DECREASE));
+        bricks.add(new Brick(40, 10, BrickType.PADDLE_SIZE_DECREASE));
+        bricks.add(new Brick(50, 10, BrickType.BALL_SPEED_INCREASE));
+        bricks.add(new Brick(60, 10, BrickType.PADDLE_SIZE_DECREASE));
+        bricks.add(new Brick(70, 10, BrickType.BALL_SPEED_INCREASE));
+        bricks.add(new Brick(80, 10, BrickType.PADDLE_SIZE_DECREASE));
+        bricks.add(new Brick(90, 10, BrickType.PADDLE_SIZE_DECREASE));
     }
 
     public static Brick brickHit(List<Brick> bricks, Ball ball) {
@@ -142,5 +194,14 @@ public class TestRun {
         }
 
         return null;
+    }
+
+    private static void printScore(int score, Terminal terminal) throws IOException {
+        terminal.setForegroundColor(TextColor.ANSI.WHITE);
+        String text = "Score: " + score;
+        for (int i = text.length() - 1; i >= 0; i--) {
+            terminal.setCursorPosition(1 + i, 1);
+            terminal.putCharacter(text.charAt(i));
+        }
     }
 }

@@ -12,7 +12,7 @@ public class Ball {
     public int xAccel;
     public int yAccel;
     public int speedFactor = 1;
-    public final char icon = 'O';
+    private final char icon = '\u267B';
 
 
     public Ball(int x, int y) {
@@ -40,17 +40,22 @@ public class Ball {
         terminal.flush();
     }
 
+    public void remove(Terminal terminal) throws IOException {
+        terminal.setCursorPosition(x, y);
+        terminal.putCharacter(' ');
+    }
+
     public boolean setNewPosition(Terminal terminal, Player player, List<Integer> playerJustMoved) throws IOException {
         prevX = x;
         prevY = y;
-        x += xAccel;
-        y += yAccel;
+        x += xAccel * speedFactor;
+        y += yAccel * speedFactor;
 
         // See if we hit edges of screen
         if (x <= 0 || x >= terminal.getTerminalSize().getColumns() - 1) {
             xAccel *= -1;
         }
-        if (y <= 1) {
+        if (y <= 2) {
             yAccel *= -1;
         }
 
