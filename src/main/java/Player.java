@@ -27,7 +27,7 @@ public class Player {
 
     public void draw(Terminal terminal) throws IOException {
 
-        terminal.setForegroundColor(TextColor.ANSI.GREEN);
+
         for (int i = 0; i < paddelSize; i++){
            terminal.setCursorPosition(oldX+i, oldY);
            terminal.putCharacter(' ');
