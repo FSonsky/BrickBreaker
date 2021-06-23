@@ -5,6 +5,8 @@ import com.googlecode.lanterna.input.KeyType;
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
 import com.googlecode.lanterna.terminal.Terminal;
 
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,14 +14,16 @@ import java.util.Random;
 
 public class TestRun {
 
-    public static void main(String[] args) throws IOException, InterruptedException {
+    public static void main(String[] args) throws IOException, InterruptedException, UnsupportedAudioFileException, LineUnavailableException {
         TerminalSize ts = new TerminalSize(100, 30);
         DefaultTerminalFactory terminalFactory = new DefaultTerminalFactory();
         terminalFactory.setInitialTerminalSize(ts);
         Terminal terminal = terminalFactory.createTerminal();
         terminal.setCursorVisible(false);
 
-        int x = terminal.getTerminalSize().getColumns() / 2, y = 10;
+        Audio audio = new Audio();
+
+        int x = terminal.getTerminalSize().getColumns() / 2, y = 27;
 
         Player player = new Player(48, 28);
         player.draw(terminal);
@@ -38,15 +42,8 @@ public class TestRun {
 
         // Create bricks
         List<Brick> bricks = new ArrayList<>();
-        bricks.add(new Brick(10, 20, 80, 1));
-        /*bricks.add(new Brick(20, 10, 5, 1));
-        bricks.add(new Brick(30, 10, 5, 1));
-        bricks.add(new Brick(40, 10, 5, 1));
-        bricks.add(new Brick(50, 10, 5, 1));
-        bricks.add(new Brick(60, 10, 5, 1));
-        bricks.add(new Brick(70, 10, 5, 1));
-        bricks.add(new Brick(80, 10, 5, 1));
-        bricks.add(new Brick(90, 10, 5, 1));*/
+        addBricks(bricks);
+
         // Draw bricks
         for (Brick b : bricks) {
             b.drawBrick(terminal);
@@ -87,9 +84,14 @@ public class TestRun {
                     if (brickHit.invertY(ball.x, ball.y)) {
                         ball.yAccel *= -1;
                     }
+                    audio.playBrickHit();
+                    brickHit.removeBrick(terminal);
+                    bricks.remove(brickHit);
                 }
 
-                ball.setNewPosition(terminal, player, playerJustMoved);
+                if (ball.setNewPosition(terminal, player, playerJustMoved)) {
+                    audio.playPaddleHit();
+                }
                 ball.draw(terminal);
                 ballPauseCount = 0;
             }
@@ -103,6 +105,7 @@ public class TestRun {
                     terminal.putCharacter(gameOver.charAt(i));
                 }
                 terminal.flush();
+                audio.playGameOver();
                 Thread.sleep(4000);
                 break;
             }
@@ -115,6 +118,18 @@ public class TestRun {
 
         System.out.println("Quit");
         terminal.close();
+    }
+
+    private static void addBricks(List<Brick> bricks) {
+        bricks.add(new Brick(10, 10, 5, 1));
+        bricks.add(new Brick(20, 10, 5, 1));
+        bricks.add(new Brick(30, 10, 5, 1));
+        bricks.add(new Brick(40, 10, 5, 1));
+        bricks.add(new Brick(50, 10, 5, 1));
+        bricks.add(new Brick(60, 10, 5, 1));
+        bricks.add(new Brick(70, 10, 5, 1));
+        bricks.add(new Brick(80, 10, 5, 1));
+        bricks.add(new Brick(90, 10, 5, 1));
     }
 
     public static Brick brickHit(List<Brick> bricks, Ball ball) {
