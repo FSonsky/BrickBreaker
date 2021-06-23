@@ -9,7 +9,7 @@ public class Brick {
     public List<Position> brickPos = new ArrayList<>();;
 
 
-    public NewBrickTest(int startX, int startY, int width, int height) {
+    public Brick(int startX, int startY, int width, int height) {
         this.startX = startX;
         this.startY = startY;
         this.width = width;
