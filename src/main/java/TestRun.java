@@ -6,6 +6,8 @@ import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
 import com.googlecode.lanterna.terminal.Terminal;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class TestRun {
@@ -32,23 +34,25 @@ public class TestRun {
         KeyStroke keyStroke;
 
         int ballPauseCount = 0;
+        List<Integer> playerJustMoved = new ArrayList<>();
 
         while (isRunning) {
             Thread.sleep(1);
             keyStroke = terminal.pollInput();
-            int playerJustMoved = 0;
+            playerJustMoved.add(0);
+
 
             if (keyStroke != null) {
                 switch (keyStroke.getKeyType()) {
                     case ArrowRight:
                         player.setNewPositionPlayer(terminal, 2);
                         player.draw(terminal);
-                        playerJustMoved = 1;
+                        playerJustMoved.add(1);
                         break;
                     case ArrowLeft:
                         player.setNewPositionPlayer(terminal,-2);
                         player.draw(terminal);
-                        playerJustMoved = -1;
+                        playerJustMoved.add(-1);
                         break;
                     case Escape:
                         isRunning = false;
@@ -79,6 +83,7 @@ public class TestRun {
             terminal.flush();
 
             ballPauseCount++;
+            playerJustMoved.remove(0);
         }
 
         System.out.println("Quit");
