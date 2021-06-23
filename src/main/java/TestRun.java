@@ -19,7 +19,7 @@ public class TestRun {
         Terminal terminal = terminalFactory.createTerminal();
         terminal.setCursorVisible(false);
 
-        int x = terminal.getTerminalSize().getColumns() / 2, y = 27;
+        int x = terminal.getTerminalSize().getColumns() / 2, y = 10;
 
         Player player = new Player(48, 28);
         player.draw(terminal);
@@ -35,6 +35,22 @@ public class TestRun {
 
         int ballPauseCount = 0;
         List<Integer> playerJustMoved = new ArrayList<>();
+
+        // Create bricks
+        List<Brick> bricks = new ArrayList<>();
+        bricks.add(new Brick(10, 20, 80, 1));
+        /*bricks.add(new Brick(20, 10, 5, 1));
+        bricks.add(new Brick(30, 10, 5, 1));
+        bricks.add(new Brick(40, 10, 5, 1));
+        bricks.add(new Brick(50, 10, 5, 1));
+        bricks.add(new Brick(60, 10, 5, 1));
+        bricks.add(new Brick(70, 10, 5, 1));
+        bricks.add(new Brick(80, 10, 5, 1));
+        bricks.add(new Brick(90, 10, 5, 1));*/
+        // Draw bricks
+        for (Brick b : bricks) {
+            b.drawBrick(terminal);
+        }
 
         while (isRunning) {
             Thread.sleep(1);
@@ -62,6 +78,17 @@ public class TestRun {
 
             // Move ball
             if (ballPauseCount >= 20) {
+                // Check if brick hit
+                Brick brickHit = brickHit(bricks, ball);
+                if (brickHit != null) {
+                    if (brickHit.invertX(ball.x, ball.y)) {
+                        ball.xAccel *= -1;
+                    }
+                    if (brickHit.invertY(ball.x, ball.y)) {
+                        ball.yAccel *= -1;
+                    }
+                }
+
                 ball.setNewPosition(terminal, player, playerJustMoved);
                 ball.draw(terminal);
                 ballPauseCount = 0;
@@ -88,5 +115,17 @@ public class TestRun {
 
         System.out.println("Quit");
         terminal.close();
+    }
+
+    public static Brick brickHit(List<Brick> bricks, Ball ball) {
+        for (Brick b : bricks) {
+            if (ball.y <= b.startY + b.heigth && ball.y >= b.startY - 1) {
+                if (ball.x >= b.startX && ball.x <= b.startX + b.width) {
+                    return b;
+                }
+            }
+        }
+
+        return null;
     }
 }
