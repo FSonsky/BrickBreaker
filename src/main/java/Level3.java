@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Level3again {
+public class Level3 {
     public static void main(String[] args) throws IOException {
         TerminalSize ts = new TerminalSize(100, 30);
         DefaultTerminalFactory terminalFactory = new DefaultTerminalFactory();
