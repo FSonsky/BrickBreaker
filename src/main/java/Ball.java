@@ -12,7 +12,7 @@ public class Ball {
     public int xAccel;
     public int yAccel;
     public int speedFactor = 1;
-    private final char icon = '\u267B';
+    private final char icon = '\u25CF';
 
 
     public Ball(int x, int y) {
