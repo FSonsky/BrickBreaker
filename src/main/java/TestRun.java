@@ -38,7 +38,7 @@ public class TestRun {
                         if (c == '1') {
                             terminal.clearScreen();
                             //audio.clip.stop();
-                            runGame(terminal);
+                            runGame(terminal, 1);
                             drawMenu(terminal);
                             //audio.clip.start();
                         } else if (c == '2') {
@@ -137,7 +137,7 @@ public class TestRun {
         terminal.flush();
     }
 
-    private static void runGame(Terminal terminal) throws IOException, InterruptedException {
+    private static void runGame(Terminal terminal, int currentLevel) throws IOException, InterruptedException {
         Audio audio = new Audio();
 
         int x = terminal.getTerminalSize().getColumns() / 2, y = 27;
@@ -158,8 +158,8 @@ public class TestRun {
         List<Integer> playerJustMoved = new ArrayList<>();
 
         // Create bricks
-        Level1 level = new Level1();
-        List<Brick> bricks = level.bricks;
+        Levels levels = new Levels();
+        List<Brick> bricks = levels.levels.get(currentLevel - 1);
 
         // Draw bricks
         for (Brick b : bricks) {
@@ -179,7 +179,7 @@ public class TestRun {
         while (isRunning) {
             Thread.sleep(5);
             keyStroke = terminal.pollInput();
-            //playerJustMoved.add(0);
+            playerJustMoved.add(0);
 
             if (keyStroke != null) {
                 switch (keyStroke.getKeyType()) {
@@ -217,11 +217,16 @@ public class TestRun {
                         brickHit.removeBrick(terminal);
                         bricks.remove(brickHit);
                         // TODO remove clear()
-                        //bricks.clear();
+                        bricks.clear();
                         // Check for level complete
                         if (bricks.isEmpty()) {
                             levelComplete(terminal, audio);
-                            bricks = new Level2().bricks;
+                            currentLevel++;
+                            if (currentLevel > levels.levels.size()) {
+                                levels = new Levels();
+                                currentLevel = 1;
+                            }
+                            bricks = levels.levels.get(currentLevel - 1);
                             // Draw bricks
                             for (Brick b : bricks) {
                                 b.drawBrick(terminal);
