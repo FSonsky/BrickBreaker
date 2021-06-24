@@ -73,7 +73,7 @@ public class Brick {
 
     public boolean invertX (int x, int y) {
         for (Position p : brickPos) {
-            if (p.x + 1 == x || p.x - 1 == x && p.y == y) {
+            if ((x + 1 == p.x || x - 1 == p.x) && y == p.y) {
                 return true;
             }
         }
@@ -81,7 +81,7 @@ public class Brick {
     }
     public boolean invertY (int x, int y) {
         for (Position p : brickPos) {
-            if (p.y + 1 == y || p.y - 1 == y && p.x == x) {
+            if ((y + 1 == p.y || y - 1 == p.y) && x == p.x) {
                 return true;
             }
         }
