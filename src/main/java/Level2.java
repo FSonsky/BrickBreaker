@@ -46,10 +46,10 @@ public class Level2 {
         bricks.add(new Brick(16, 7, BrickType.NORMAL));
         bricks.add(new Brick(23, 7, BrickType.NORMAL));
         bricks.add(new Brick(30, 7, BrickType.NORMAL));
-        bricks.add(new Brick(37, 7, BrickType.NORMAL));
-        //bricks.add(new Brick(44, 7, BrickType.NORMAL));
-        //bricks.add(new Brick(51, 7, BrickType.NORMAL));
-        bricks.add(new Brick(58, 7, BrickType.NORMAL));
+        bricks.add(new Brick(37, 7, BrickType.BALL_SPEED_INCREASE));
+        bricks.add(new Brick(44, 7, BrickType.NORMAL));
+        bricks.add(new Brick(51, 7, BrickType.NORMAL));
+        bricks.add(new Brick(58, 7, BrickType.BALL_SPEED_INCREASE));
         bricks.add(new Brick(65, 7, BrickType.NORMAL));
         bricks.add(new Brick(72, 7, BrickType.NORMAL));
         bricks.add(new Brick(79, 7, BrickType.NORMAL));
@@ -92,8 +92,8 @@ public class Level2 {
         //bricks.add(new Brick(23, 13, BrickType.NORMAL));
         //bricks.add(new Brick(30, 13, BrickType.NORMAL));
         bricks.add(new Brick(37, 13, BrickType.NORMAL));
-        //bricks.add(new Brick(44, 13, BrickType.NORMAL));
-        //bricks.add(new Brick(51, 13, BrickType.NORMAL));
+        bricks.add(new Brick(44, 13, BrickType.PADDLE_SIZE_DECREASE));
+        bricks.add(new Brick(51, 13, BrickType.PADDLE_SIZE_INCREASE));
         bricks.add(new Brick(58, 13, BrickType.NORMAL));
         //bricks.add(new Brick(65, 13, BrickType.NORMAL));
         //bricks.add(new Brick(72, 13, BrickType.NORMAL));
