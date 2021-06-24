@@ -149,8 +149,6 @@ public class Main {
         Ball ball = new Ball(x, y, rand.nextBoolean() ? -1 : 1, -1);
         ball.draw(terminal);
 
-        terminal.flush();
-
         boolean isRunning = true;
         KeyStroke keyStroke;
 
@@ -175,6 +173,8 @@ public class Main {
         int score = 0;
         final int highScore = readHighScoreFromFile();
         printScore(score, highScore, terminal);
+
+        terminal.flush();
 
         while (isRunning) {
             Thread.sleep(5);
@@ -260,6 +260,7 @@ public class Main {
                             resetBallSpeedCounter = 30;
                             isSpecialBallSpeed = true;
                             audio.playSpeedBrickHit();
+                            break;
                         default:
                             audio.playBrickHit();
                             break;
@@ -290,21 +291,21 @@ public class Main {
                 } else if (isSpecialBallSpeed) {
                     resetBallSpeedCounter--;
                 }
-            }
 
-            // Check for Game Over
-            if (ball.y >= terminal.getTerminalSize().getRows()) {
-                String gameOver = "Game Over";
-                terminal.setForegroundColor(TextColor.ANSI.RED);
-                for (int i = 0; i < gameOver.length(); i++) {
-                    terminal.setCursorPosition(46 + i, 15);
-                    terminal.putCharacter(gameOver.charAt(i));
+                // Check for Game Over
+                if (ball.y >= terminal.getTerminalSize().getRows()) {
+                    String gameOver = "Game Over";
+                    terminal.setForegroundColor(TextColor.ANSI.RED);
+                    for (int i = 0; i < gameOver.length(); i++) {
+                        terminal.setCursorPosition(46 + i, 15);
+                        terminal.putCharacter(gameOver.charAt(i));
+                    }
+                    ball.remove(terminal);
+                    terminal.flush();
+                    audio.playGameOver();
+                    Thread.sleep(4000);
+                    break;
                 }
-                ball.remove(terminal);
-                terminal.flush();
-                audio.playGameOver();
-                Thread.sleep(4000);
-                break;
             }
 
             terminal.flush();
