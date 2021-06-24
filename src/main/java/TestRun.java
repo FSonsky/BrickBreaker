@@ -179,8 +179,7 @@ public class TestRun {
         while (isRunning) {
             Thread.sleep(5);
             keyStroke = terminal.pollInput();
-            playerJustMoved.add(0);
-
+            //playerJustMoved.add(0);
 
             if (keyStroke != null) {
                 switch (keyStroke.getKeyType()) {
@@ -306,7 +305,9 @@ public class TestRun {
             terminal.flush();
 
             ballPauseCount++;
-            playerJustMoved.remove(0);
+            if (!playerJustMoved.isEmpty()) {
+                playerJustMoved.remove(0);
+            }
         }
 
         System.out.println("Quit");
@@ -327,7 +328,9 @@ public class TestRun {
 
         while (isRunning) {
             keyStroke = terminal.pollInput();
+
             if (keyStroke != null) {
+
                 switch (keyStroke.getKeyType()) {
                     case ArrowLeft:
                         if (selectedLevel > 1) {

@@ -4,6 +4,7 @@ import java.io.IOException;
 
 public class Audio {
     public Clip clip;
+    public Clip paddleHitClip;
 
     public void playTheme() {
         try {
