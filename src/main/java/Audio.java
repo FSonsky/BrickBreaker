@@ -3,22 +3,6 @@ import java.io.File;
 import java.io.IOException;
 
 public class Audio {
-    public Clip clip;
-    public Clip paddleHitClip;
-
-    public void playTheme() {
-        try {
-            AudioInputStream paddleHit = AudioSystem.getAudioInputStream(new File("src/sounds/gameMusic.wav").getAbsoluteFile());
-            Clip clip = AudioSystem.getClip();
-            clip.open(paddleHit);
-            clip.loop(Clip.LOOP_CONTINUOUSLY);
-            clip.start();
-            this.clip = clip;
-        } catch(Exception ex) {
-            System.out.println("Error with playing sound.");
-            ex.printStackTrace();
-        }
-    }
 
     public void playPaddleHit() {
         try {

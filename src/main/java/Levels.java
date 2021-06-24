@@ -8,5 +8,7 @@ public class Levels {
         levels = new ArrayList<>();
         levels.add(new Level1().bricks);
         levels.add(new Level2().bricks);
+        levels.add(new LevelF().bricks);
+        levels.add(new Level3().bricks);
     }
 }
