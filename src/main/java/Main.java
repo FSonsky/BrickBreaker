@@ -27,8 +27,6 @@ public class Main {
 
         boolean isRunning = true;
         KeyStroke keyStroke;
-        //Audio audio = new Audio();
-        //audio.playTheme();
         while (isRunning) {
             keyStroke = terminal.pollInput();
             if (keyStroke != null) {
@@ -37,10 +35,8 @@ public class Main {
                         char c = keyStroke.getCharacter();
                         if (c == '1') {
                             terminal.clearScreen();
-                            //audio.clip.stop();
                             runGame(terminal, 1);
                             drawMenu(terminal);
-                            //audio.clip.start();
                         } else if (c == '2') {
                             terminal.clearScreen();
                             viewLevels(terminal);
@@ -56,7 +52,6 @@ public class Main {
             Thread.sleep(10);
         }
 
-        //audio.clip.stop();
         terminal.close();
     }
 
