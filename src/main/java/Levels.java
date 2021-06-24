@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Levels {
-    List<List> levels;
+    List<List<Brick>> levels;
 
     public Levels() {
         levels = new ArrayList<>();
@@ -10,5 +10,6 @@ public class Levels {
         levels.add(new Level2().bricks);
         levels.add(new LevelF().bricks);
         levels.add(new Level3().bricks);
+        levels.add(new Level4().bricks);
     }
 }
