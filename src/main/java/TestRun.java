@@ -217,7 +217,7 @@ public class TestRun {
                         brickHit.removeBrick(terminal);
                         bricks.remove(brickHit);
                         // TODO remove clear()
-                        bricks.clear();
+                        //bricks.clear();
                         // Check for level complete
                         if (bricks.isEmpty()) {
                             levelComplete(terminal, audio);
