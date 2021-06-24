@@ -322,7 +322,7 @@ public class TestRun {
         }
     }
 
-    private static void viewLevels(Terminal terminal) throws IOException {
+    private static void viewLevels(Terminal terminal) throws IOException, InterruptedException {
         terminal.clearScreen();
         Levels levels = new Levels();
         int selectedLevel = 1;
@@ -349,6 +349,10 @@ public class TestRun {
                             drawLevel(terminal, selectedLevel, levels);
                         }
                         break;
+                    case Enter:
+                        terminal.clearScreen();
+                        runGame(terminal, selectedLevel);
+                        return;
                     case Escape:
                         isRunning = false;
                         break;
@@ -375,6 +379,12 @@ public class TestRun {
         text = "ESC: Back";
         for (int i = 0; i < text.length(); i++) {
             terminal.setCursorPosition(1 + i, 28);
+            terminal.putCharacter(text.charAt(i));
+        }
+
+        text = "Enter: Play";
+        for (int i = 0; i < text.length(); i++) {
+            terminal.setCursorPosition(88 + i, 28);
             terminal.putCharacter(text.charAt(i));
         }
 
